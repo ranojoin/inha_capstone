@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Massively by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body onload="listprint()">
+
+
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
+
+    <!-- Intro -->
+
+
+    <!-- Header -->
+    <header id="header">
+        <a href="/home" class="logo">home</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li class="active"><a href="/">HOME</a></li>
+            <li><a href="/login">LOGIN</a></li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Featured Post -->
+        <article class="post featured">
+            <header class="major">
+                <!--<span class="date">April 25, 2017</span> -->
+                <h2><a href="#">나의 예약목록</a></h2>
+            </header>
+            <a href="#" class="image main"></a>
+
+        </article>
+
+        <!-- Posts -->
+        <section id ="test" class="posts">
+            <article>
+
+            </article>
+
+
+        </section>
+
+
+    </div>
+
+
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+
+    var firebaseEmailAuth;
+    var firebaseDatabase;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+    function reservation(){
+
+        const size = firebaseDatabase.ref('reservation/');
+        size.once("value",function(snapshot){
+            index = snapshot.numChildren()+1;
+            const ref = firebaseDatabase.ref('reservation/index'+index);
+            ref.set({
+                from : "010-111-2222",
+                name : "test",
+                info : "좆까 개새끼야",
+                state : "대기"
+            }, function(error){
+                if(error) {
+                    //alert("예약에 실패 했습니다 다시 시도해주세요");
+                }else {
+                    //alert("예약에 성공했습니다.");
+                    window.location.reload();
+
+                }
+
+            });
+
+        })
+
+
+
+
+    }
+
+
+    function listprint(){
+        var phone;
+        firebaseEmailAuth.onAuthStateChanged(function (user) {
+            firebaseDatabase.ref("users/" + user.uid).once('value').then(function (snapshot) {
+                phone = snapshot.val().phone;
+                console.log(phone);
+                //alert(phone);
+
+
+        const ref = firebaseDatabase.ref('reservation/');
+        ref.on("value",function(snapshot){
+            //console.log(snapshot.val());
+            const info=snapshot.val();
+            var html ='';
+            for(var i=1; i<=snapshot.numChildren(); i++) {
+                const ref_store = firebaseDatabase.ref('reservation/index'+i);
+                ref_store.on("value",function(snapshot){
+
+
+
+                        if(snapshot.val().from==phone) {
+
+                            html += '<section id ="test" class="posts">';
+                            html += '<article>';
+                            html += '<header>';
+                            html += '<h2> 가게 이름 : ' + snapshot.val().name + '</h2>';
+                            if(snapshot.val().state=='승인'){
+                                html += '<h2 style="color:lightgreen">예약 상태 : '+snapshot.val().state+'</h2>';
+
+                            }else if(snapshot.val().state=='거절'){
+                                html += '<h2 style="color:red">예약 상태 : '+snapshot.val().state+'</h2>';
+                            }else {
+                                html += '<h2>예약 상태 : '+snapshot.val().state+'</h2>';
+
+                            }
+
+
+                            html += '</header>';
+                            html += '</article>';
+                            html += '</section>'
+                        }
+
+
+
+                });
+
+            }
+            $('#test').html(html);
+        });
+
+            });
+        });
+
+    }
+</script>
+
+
+</body>
+</html>

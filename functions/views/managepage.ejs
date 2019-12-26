@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Massively by HTML5 UP</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body onload="listprint()">
+
+
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
+
+    <!-- Intro -->
+
+
+    <!-- Header -->
+    <header id="header">
+        <a href="/Main" class="logo">Home</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li class="active"><a href="/">HOME</a></li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Featured Post -->
+        <article class="post featured">
+            <header class="major">
+                <!--<span class="date">April 25, 2017</span> -->
+                <h2><a href="#">우리가게 예약목록</a></h2>
+            </header>
+            <a href="#" class="image main"></a>
+
+        </article>
+
+        <!-- Posts -->
+        <section id ="test" class="posts">
+            <article>
+
+            </article>
+
+
+        </section>
+
+
+    </div>
+
+
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+
+
+    var firebaseDatabase;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    //firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+
+    function listprint(){
+        const ref = firebaseDatabase.ref('reservation/');
+        ref.on("value",function(snapshot){
+            //console.log(snapshot.val());
+            const info=snapshot.val();
+            var html ='';
+            for(var i=1; i<=snapshot.numChildren(); i++) {
+                const ref_store = firebaseDatabase.ref('reservation/index'+i);
+                ref_store.on("value",function(snapshot){
+                    index = "'index";
+                    index += i+"'";
+
+
+                    if(snapshot.val().name=='카페그레고리') {
+                        html += '<section id ="test" class="posts">';
+                        html += '<article>';
+                        html += '<header>';
+                        html += '<h2> 고객 번호 : ' + snapshot.val().from + '</h2>';
+                        html += '<p>예약내용 : '+snapshot.val().info+'</p>'
+                        if(snapshot.val().state=='대기') {
+                            html += '<h2>예약 상태 : ' + snapshot.val().state + '</h2>';
+                            html += '<button onclick="summit('+index+')">승인</button><button onclick="dissummit('+index+')">거절</button>';
+                        }else{
+                            html += '<h2>예약 상태 : ' + snapshot.val().state + '</h2>';
+                        }
+                        html += '</header>';
+                        html += '</article>';
+                        html += '</section>'
+                    }
+
+
+
+                });
+
+            }
+            $('#test').html(html);
+        });
+
+
+
+    }
+    function summit(index){
+
+        const ref= firebaseDatabase.ref('reservation/'+index);
+        ref.update({
+            state : "승인"
+        });
+    }
+    function dissummit(index){
+        const ref= firebaseDatabase.ref('reservation/'+index);
+        ref.update({
+            state : "거절"
+        });
+
+    }
+
+</script>
+
+
+</body>
+</html>

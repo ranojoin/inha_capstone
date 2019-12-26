@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>로그인</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <a href="index.html" class="logo">HOME</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li><a href="index.html">HOME</a></li>
+            <li class="active"><a href="generic.html">MY PAGE</a></li>
+            <li><a href="elements.html">뭘 넣을까~</a></li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+                <div class="fields">
+                    <div class="field">
+                        <h2>login</h2>
+                        <label for="email">email</label>
+                        <input type="email" name="email" id="email" />
+                    </div>
+                    <div class="field">
+                        <label for="password">password</label>
+                        <input type="password" name="password" id="password" />
+                    </div>
+                    <div class="field">
+
+                    </div>
+                </div>
+                <ul class="actions">
+                    <li> <button type="button" class="btn btn-default login">L o g i n </button></li>
+                </ul>
+            <button onclick="location.href='/signup'">Sign up</button>
+        </section>
+        <section class="split contact">
+            <section class="alt">
+                <h3>contact us</h3>
+                <p>김진혁 : <br />
+                    정새하 : <br/>
+                    이지우 : <br/>
+
+            </section>
+
+        </section>
+    </footer>
+
+    <!-- Copyright -->
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+
+
+    var firebaseDatabase;
+    var firebaseEmailAuth;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+
+
+    $(document).ready(function(){
+
+        //가입버튼 눌렀을 때
+        $(document).on('click','.login',function(){
+
+            //제이쿼리 선택자와 val() 함수를 이용해서 이메일,비밀번호 값을 가져온다.
+            var email = $('#email').val();
+            var password = $('#password').val();
+
+            //파이어베이스 이메일 로그인 함수
+            firebaseEmailAuth.signInWithEmailAndPassword(email, password)
+                .then(function(firebaseUser) {
+
+                    //성공하면 firebaseUser에 유저 정보 값이 담겨 넘어온다.
+                    loginSuccess(firebaseUser);
+
+                })
+                .catch(function(error) {
+                    // 실패했을 때 에러 처리
+                    alert(error);
+                    alert("로그인 실패");
+                });
+
+        });
+    });
+
+    //로그인 성공했을 때
+    function loginSuccess(firebaseUser){
+        alert("로그인 성공");
+
+        //로그인 성공한 유저 id 확인해 보기 - firebase database에 접근해서 데이터 조회 하는 함수
+        firebaseDatabase.ref("users/"+firebaseUser.uid).once('value').then(function(snapshot){
+            //alert(snapshot.val().name)
+        });
+
+        //메인 페이지로 이동
+        window.location.href = "/main"
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+
+
+<html>
+<head>
+    <title>인하브릿지</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload" onload="testFunction()">
+
+
+<!-- Wrapper -->
+<div id="wrapper" class="fade-in">
+
+    <!-- Intro -->
+
+
+    <!-- Header -->
+    <header id="header">
+        <a href="/main" class="logo">인하브릿지</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li class="active"><a href="/">HOME</a></li>
+            <li><a href="/managepage">관리페이지</a></li>
+            <li><a href="/login">LOGIN</a></li>
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Featured Post -->
+        <article class="post featured">
+            <header class="major">
+                <!--<span class="date">April 25, 2017</span> -->
+                <h2><a href="#">인하 브릿지</a></h2>
+                <p>더 이상 기다리지 마세요. 식당의 빈자리 알림 및 에약 서비스.</p>
+                <p>빈자리를 확인하고, 가고싶은 식당 예약을 해보세요!</p>
+            </header>
+            <a href="#" class="image main"></a>
+
+        </article>
+
+        <!-- Posts -->
+        <section id ="test" class="posts">
+            <article>
+                <header>
+                    <h2>담벼락</h2>
+                </header>
+                <a onclick="info('index1')" class="image fit" id='index' name="index" value="index1"><img src="images/dambyurack.jpeg" alt="" /></a>
+                <p>인하대 후문 계란무한리필 맛집</p>
+                <ul class="actions special">
+                    <form method = "post" action="/reservation">
+                        <input type="text" name="index" value="index1" style="visibility:hidden">
+                        <li><input type="submit" class="button" value="예약하기"></li>
+                    </form>
+                </ul>
+            </article>
+
+
+        </section>
+
+
+    </div>
+
+
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+
+
+    var firebaseDatabase;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    //firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+
+    function getinfo(index){
+        //alert(index);
+        var form = document.createElement("form");
+        form.setAttribute("charset","UTF-8");
+        form.setAttribute("method","Post");
+        form.setAttribute("action","/info");
+        var hiddenField = document.createElement("input");
+        hiddenField.setAttribute("type","hidden");
+        hiddenField.setAttribute("name","mName");
+        hiddenField.setAttribute("value",index);
+        form.appendChild(hiddenField);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    function testFunction(){
+        const ref = firebaseDatabase.ref('store_info/');
+        ref.on("value",function(snapshot){
+            //console.log(snapshot.val());
+            const info=snapshot.val();
+            var test = "index";
+            var html ='';
+            for(var i=1; i<=snapshot.numChildren(); i++) {
+                const ref_store = firebaseDatabase.ref('store_info/index'+i);
+                ref_store.on("value",function(snapshot){
+                    test = "'index";
+                    test += i+"'";
+
+
+                    html += '<section id ="test" class="posts">';
+                    html += '<article>';
+                    html += '<header>';
+                    html += '<h2>'+snapshot.val().name+'</h2>';
+                    html += '</header>';
+                    html += '<a onclick="getinfo('+test+')" class="image fit" id=\'index\' name="index" value="index1"><img src="'+snapshot.val().imgurl+'" alt="" /></a>'
+                    html += '<h3>현재 빈자리 : '+snapshot.val().table+'</h3>'
+                    html += '</article>';
+                    html += '</section>'
+
+
+                });
+
+            }
+            $('#test').html(html);
+
+        });
+
+
+
+    }
+
+
+
+
+</script>
+
+</body>
+
+</html>

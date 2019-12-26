@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>출력페이지</title>
+</head>
+<body onload="testFunction()">
+<button onclick="testFunction()">Try it</button>
+<div id="test">
+하위하위
+</div>
+
+
+</body>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script language="javascript">
+
+    function testFunction(){
+        var html ='';
+        for(var i=0; i<10; i++) {
+            html += '<div><button>hihi</button>Test'+i+'</div>';
+
+        }
+        $('#test').html(html);
+
+    }
+</script>
+</html>
+
+
+
+<!--<HTML>-->
+<!--<HEAD>-->
+<!--    <script language="javascript">-->
+<!--        function loaded()//작동 시 아래 기능적용-->
+<!--        {-->
+<!--            document.all.loading.style.display = 'none';//ID로딩 (GIF이미지 및 문구) 없어져라!-->
+<!--            document.all.wrap.style.display = 'block';//ID wrap 생겨라!-->
+<!--        }-->
+<!--    </script>-->
+<!--</HEAD>-->
+
+<!--<BODY onload="loaded();">&lt;!&ndash;모두 로딩되면 위 loaded 함수가 작동됩니다.&ndash;&gt;-->
+
+<!--&lt;!&ndash;로딩이미지와 글귀 시작 &ndash;&gt;-->
+<!--<div id="loading" runat="server" style="position:absolute;left:50%;top:50%;margin-top:-140px;-->
+
+<!--                      margin-   left:-250px;DISPLAY: block;text-align:center;">-->
+
+<!--    <img src="loading.gif" width="500" height="250" border="0">-->
+<!--    <br><br>-->
+<!--    <font color="999999" style="font-size:30px;">페이지 로딩중입니다.</font>-->
+
+<!--</div>-->
+<!--&lt;!&ndash;로딩이미지와 글귀 끝!&ndash;&gt;-->
+
+
+
+<!--&lt;!&ndash;기존 페이지 내용 시작!&ndash;&gt;-->
+<!--<div id="wrap" runat="server" style="DISPLAY:none">-->
+<!--    여기에 본문을 적으시면 됩니다!-->
+<!--</div>-->
+<!--&lt;!&ndash;기존 페이지 내용 끝!&ndash;&gt;-->
+
+<!--</BODY>-->
+<!--</HTML>-->
+<section id ="test" class="posts">
+    <article>
+        <header>
+            <h2>담벼락</h2>
+        </header>
+        <a onclick="info('index1')" class="image fit" id='index' name="index" value="index1"><img src="images/dambyurack.jpeg" alt="" /></a>
+        <p>인하대 후문 계란무한리필 맛집</p>
+        <ul class="actions special">
+            <form method = "post" action="/reservation">
+                <input type="text" name="index" value="index1" style="visibility:hidden">
+                <li><input type="submit" class="button" value="예약하기"></li>
+            </form>
+        </ul>
+    </article>
+
+
+</section>

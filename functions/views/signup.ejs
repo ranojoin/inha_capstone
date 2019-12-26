@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>로그인</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <a href="index.html" class="logo">HOME</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li><a href="index.html">HOME</a></li>
+
+        </ul>
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+
+                <div class="fields">
+                    <div class="field">
+                        <h2>login</h2>
+                        <label for="email">email</label>
+                        <input type="email" name="email" id="email" />
+                    </div>
+                    <div class="field">
+                        <label for="password">비밀번호</label>
+                        <input type="password" name="password" id="password" />
+                    </div>
+                    <div class="field">
+                        <label for="password">비밀번호 확인</label>
+                        <input type="password" name="passwordcon" id="passwordcon" />
+                    </div>
+                    <div class="field">
+                        <label for="phone">핸드폰 번호</label>
+                        <input type="text" name="phone" id="phone" />
+                    </div>
+                    <div class="field">
+                        <label for="name">이름</label>
+                        <input type="text" name="name" id="name" />
+                    </div>
+                    <div class="field">
+
+                    </div>
+                </div>
+                <ul class="actions">
+                    <li>  <button type="button" class="btn btn-default join">Sign Up</button></li>
+                </ul>
+
+        </section>
+        <section class="split contact">
+            <section class="alt">
+                <h3>contact us</h3>
+                <p>김진혁 : <br />
+                    정새하 : <br/>
+                    이지우 : <br/>
+
+            </section>
+
+        </section>
+    </footer>
+
+    <!-- Copyright -->
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+
+
+    var firebaseDatabase;
+    var firebaseEmailAuth;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+
+
+    $(document).ready(function(){
+
+        //가입버튼 눌렀을 때 작동하는 함수
+        $(document).on('click','.join',function(){
+
+
+            //jquery를 이용해서 입력된 값을 가져온다.
+            var email = $('#email').val();
+            var password = $('#password').val();
+            var passwordcon = $('#passwordcon').val();
+            var phone = $('#phone').val();
+            var name = $('#name').val();
+
+//이메일로 가입 버튼 눌렀을 때 작동되는 함수 - firebase 인증 모듈
+            firebaseEmailAuth.createUserWithEmailAndPassword(email, password).then(function(user) {
+
+                userInfo = user; //가입 후 callBack 함수로 생성된 유저의 정보가 user에 담겨서 넘어온다. 전역변수에 할당.
+
+                //뭐가 찍히는지 직접 체크해보세요.
+                console.log("userInfo/"+userInfo); //오브젝트 타입
+                console.log("userInfo.currentUser/"+userInfo.currentUser); //안됨
+                console.log("userInfo.uid/"+userInfo.uid); //vPArtCHqPpOeIOpidEfug0Kgq3v1
+
+                //성공했을 때 작동되는 함수
+                logUser();
+
+            }, function(error) {
+                //에러가 발생했을 때
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert(errorMessage);
+
+            });
+
+//가입 성공했을 때 호출 되는 함수 - 위의 firebase의 인증 모듈과 다른 database 모듈임을 확인하자.
+            function logUser(){
+                var ref = firebaseDatabase.ref("users/"+userInfo.uid); //저장될 곳을 users라는 부모 키를 레퍼런스로 지정.
+
+                //저장 형식
+                var obj = {
+                    email : email,
+                    name: name,
+                    phone : phone
+                };
+
+                ref.set(obj); // 고유한 자식 키가 하나 생셩이 되면서 json 삽입
+                alert("가입성공");
+
+                //메인 페이지로 이동시키고 세션 저장시키기
+                window.location.href = "/main"
+            }
+
+
+        });
+    });
+</script>
+</body>
+</html>

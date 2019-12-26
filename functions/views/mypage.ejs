@@ -1,0 +1,47 @@
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <h1>마이페이지a</h1>
+
+
+</head>
+<body>
+
+<input type="button" onclick= "test();" />
+<input type="button" onclick= "test2();" />
+
+</body>
+
+
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script type="text/javascript" src="../javascript/test.js"></script>
+<script>
+     var firebaseDatabase;
+     var config = {
+         apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+         authDomain: "inha-capston.firebaseapp.com",
+         databaseURL: "https://inha-capston.firebaseio.com",
+         projectId: "inha-capston",
+         storageBucket: "inha-capston.appspot.com",
+         messagingSenderId: "451103431466",
+         appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+     };
+     firebase.initializeApp(config);
+
+     //firebaseEmailAuth = firebase.auth();
+     firebaseDatabase = firebase.database();
+
+// function test(){
+//     const rootRef = firebaseDatabase.ref();
+//     rootRef.set("hello?");
+//     rootRef.on("value", function(snapshot){
+//         console.log("it is");
+//         console.log(snapshot.val());
+//     });
+//      };
+
+
+</script>
+</html>

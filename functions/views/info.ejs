@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+    <title>가게정보</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Header -->
+    <header id="header">
+        <a href="/" class="logo">HOME</a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="nav">
+        <ul class="links">
+            <li><a href="index.html">HOME</a></li>
+            <li class="active"><a href="generic.html">MY PAGE</a></li>
+            <li><a href="elements.html">뭘 넣을까~</a></li>
+        </ul>
+<!--        <ul class="icons">-->
+<!--            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>-->
+<!--            <li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>-->
+<!--            <li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>-->
+<!--            <li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>-->
+<!--        </ul>-->
+    </nav>
+
+    <!-- Main -->
+
+    <!-- Footer -->
+    <footer id="footer">
+        <section>
+            <article>
+                <header>
+
+                    <h2 class="test"></h2>
+                </header>
+                <a  class="image fit" id='index' name="index" value="index1"><img src="images/dambyurack.jpeg" alt="" /></a>
+                <ul class="actions special">
+                <div>
+                        <h3>메뉴</h3>
+                        <p class="menu1"></p>
+                        <p class="menu2"></p>
+                        <p class="menu3"></p>
+                        <h3>요청사항</h3>
+                        <textarea id="info" cols="50" rows="8"></textarea>
+                        <button onclick="reservation('<%=index%>')">예약하기</button>
+                </div>
+                </ul>
+            </article>
+        </section>
+    </footer>
+
+    <!-- Copyright -->
+    <div id="copyright">
+        <ul><li>&copy; Untitled</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+    </div>
+
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script>
+    var firebaseEmailAuth;
+    var firebaseDatabase;
+    var config = {
+        apiKey: "AIzaSyAf-biXT52z63qcKoxmUKceM5cFgj6Zc3M",
+        authDomain: "inha-capston.firebaseapp.com",
+        databaseURL: "https://inha-capston.firebaseio.com",
+        projectId: "inha-capston",
+        storageBucket: "inha-capston.appspot.com",
+        messagingSenderId: "451103431466",
+        appId: "1:451103431466:web:c8bff8edf31385ec2a9c53"
+    };
+    firebase.initializeApp(config);
+
+    firebaseEmailAuth = firebase.auth();
+    firebaseDatabase = firebase.database();
+    function reservation(store_index){
+        var phone;
+        firebaseEmailAuth.onAuthStateChanged(function (user) {
+            firebaseDatabase.ref("users/" + user.uid).once('value').then(function (snapshot) {
+                phone = snapshot.val().phone;
+                console.log(phone);
+
+        var textarea = $('#info').val();
+        //alert(textarea);
+        //alert(phone);
+        const size = firebaseDatabase.ref('reservation/');
+        const store = firebaseDatabase.ref('store_info/'+store_index);
+        var test='010-9270-0225';
+        size.once("value",function(snapshot){
+            index = snapshot.numChildren()+1;
+            store.once("value", function(snapshot){
+                const value = snapshot.val();
+                const ref = firebaseDatabase.ref('reservation/index'+index);
+                ref.set({
+                    from : phone,
+                    name : value.name,
+                    info : textarea,
+                    state : "대기"
+                }, function(error){
+                    if(error) {
+                        //alert("예약에 실패 했습니다 다시 시도해주세요");
+                    }else {
+                        //alert("예약에 성공했습니다.");
+                        window.location.href="/reservation";
+
+                    }
+
+                });
+
+            })
+
+
+        })
+            });
+        });
+
+
+
+    }
+    getinfo('<%=index%>');
+
+
+    function getinfo(index){
+
+        // LoadingMask();
+        const ref = firebaseDatabase.ref('store_info/'+index);
+    	ref.on("value", function(snapshot){
+
+        var html=''
+    		const info1 = snapshot.val();
+    		//console.log(info1);
+
+    		$.ajax({
+
+    			url:'/info/store',
+    			type : 'post',
+    			data: JSON.stringify(info1),
+    			contentType:'application/json; charset=utf-8',
+    			dataType:'json',
+    			success:function(data){
+    			    $('.test').html(data.result.name);
+                    $('.menu1').html(data.result.menu[1]);
+                    $('.menu2').html(data.result.menu[2]);
+                    $(`.menu3`).html(data.result.menu[3]);
+
+                    html += '<a class="image fit" id=\'index\' name="index" value="index1"><img src="'+snapshot.val().imgurl+'" alt="" /></a>'
+                    html += '<p>'+snapshot.val().notice+'</p>'
+
+                    $('#index').html(html);
+    			}
+    		});
+
+
+    	});
+
+
+    };
+
+
+</script>
+</body>
+</html>
+
+
